@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,6 +10,10 @@ public class PlayerMove : MonoBehaviour
     Lab3InputActions inputActions;
     PlayerInput playerInput;
     CharacterController controller;
+
+
+    public float speed = 1f;
+
     [SerializeField]
     // Start is called before the first frame update
     void Start()
@@ -33,19 +37,39 @@ public class PlayerMove : MonoBehaviour
         float rotationX = 30f * cameraVector.x * Time.deltaTime;
         float rotationY = 30f * cameraVector.y * Time.deltaTime;
 
-        //Vector3 CameraRotation = playerInput.camera.transform.rotation.eulerAngles;
         Vector3 CameraRotation = playerInput.camera.transform.rotation.eulerAngles;
 
-        //CameraRotation.x -= rotationY;
+        
         CameraRotation.y += rotationX;
-        this.gameObject.transform.rotation = Quaternion.Euler(CameraRotation);
 
+        if(CameraRotation.x - rotationY >= 90 && CameraRotation.x < 90)
+        {
+            CameraRotation.x = 89;
+        }
+        else if (CameraRotation.x - rotationY <= 270 && CameraRotation.x > 270)
+        {
+            CameraRotation.x = 271;
+        }
+        else
+        {
+            CameraRotation.x -= rotationY;
+        }
+        this.gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, CameraRotation.y));
+        playerInput.camera.transform.localRotation = Quaternion.Euler(new Vector3(CameraRotation.x,0));
 
-        moveV = new Vector3(inputActions.Player.Move.ReadValue<Vector2>().x * Time.deltaTime,
-            -r.velocity.y,
-            inputActions.Player.Move.ReadValue<Vector2>().y * Time.deltaTime);
+        if (!controller.isGrounded)
+        {
+            r.velocity = new Vector3(r.velocity.x, r.velocity.y -9.81f , r.velocity.z);
+        }
+
+        moveV = new Vector3(
+            inputActions.Player.Move.ReadValue<Vector2>().x * Time.deltaTime * speed,
+            0,
+            inputActions.Player.Move.ReadValue<Vector2>().y * Time.deltaTime * speed
+            );
         moveV = transform.TransformDirection(moveV);
 
         controller.Move(moveV);
+        controller.Move(new Vector3(0, r.velocity.y, 0));
     }
 }

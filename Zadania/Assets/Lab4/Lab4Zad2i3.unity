@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -9997,7 +9997,7 @@ CharacterController:
   serializedVersion: 2
   m_Height: 2
   m_Radius: 0.5000001
-  m_SlopeLimit: 45
+  m_SlopeLimit: 30
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
@@ -10059,7 +10059,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1764949083}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.076662, y: 1.5, z: 56.600002}
+  m_LocalPosition: {x: -6.076662, y: 3.47, z: 56.600002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 532759349}
@@ -10078,6 +10078,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42a8b454b53574a419b76f71a13db575, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 3
 --- !u!54 &1764949090
 Rigidbody:
   m_ObjectHideFlags: 0
