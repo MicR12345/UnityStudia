@@ -23,6 +23,15 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.2d.ik": {
+      "version": "3.0.2-preview.3",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.2d.common": "3.0.1"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.2d.path": {
       "version": "4.0.2",
       "depth": 1,
@@ -73,7 +82,7 @@
       "dependencies": {}
     },
     "com.unity.collab-proxy": {
-      "version": "1.13.5",
+      "version": "1.15.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
