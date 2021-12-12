@@ -92,6 +92,7 @@ public class PlayerMovement : MonoBehaviour
         
         if (world.playerData.attackCooldownTimer <= 0)
         {
+            world.playerData.invincibilityTimer = world.playerData.attackCooldown * 0.1f;
             animator.SetFloat("attackCooldown", 1/world.playerData.attackCooldown);
             weapon.SetActive(true);
             world.playerData.attackCooldownTimer = world.playerData.attackCooldown;

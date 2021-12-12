@@ -17,7 +17,7 @@ public class MaxHPScript : MonoBehaviour
                 {
                     PlayerMovement playerMovement = item.GetComponent<PlayerMovement>();
                     WorldManager wm = playerMovement.worldHandler.GetComponent<WorldManager>();
-                    wm.playerData.MaxHealth = wm.playerData.MaxHealth * 1.1f;
+                    wm.playerData.MaxHealth = wm.playerData.MaxHealth * 1.1f +3f;
                     wm.playerData.Health = wm.playerData.MaxHealth;
                     wm.playerData.MaxHPincreasedCounter++;
                     wm.UpdateHpBar();

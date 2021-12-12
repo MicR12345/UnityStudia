@@ -4,8 +4,8 @@ using UnityEngine;
 [System.Serializable]
 public class Player
 {
-    public bool invinclible = false;
     public float invincibilityTime = 0.5f;
+    public float invincibilityTimer = 0f;
 
     public float Health;
     public float MaxHealth;

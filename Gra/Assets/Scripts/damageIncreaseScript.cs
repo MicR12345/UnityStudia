@@ -17,7 +17,7 @@ public class damageIncreaseScript : MonoBehaviour
                 {
                     PlayerMovement playerMovement = item.GetComponent<PlayerMovement>();
                     WorldManager wm = playerMovement.worldHandler.GetComponent<WorldManager>();
-                    wm.playerData.attackDamage = wm.playerData.attackDamage*1.2f;
+                    wm.playerData.attackDamage = wm.playerData.attackDamage*1.2f + 1f;
                     wm.playerData.ADincreasedCounter++;
                     wm.UpdateUIs();
                     AudioSource.PlayClipAtPoint(wm.audioClips[9], this.transform.position);

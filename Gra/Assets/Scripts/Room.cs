@@ -25,6 +25,7 @@ public class Room
     public int MaxEnemies = 7;
 
     public int MaxInteractable = 4;
+    public int MinInteractable = 0;
 
     public float RoomMultiplier = 1;
 
@@ -57,6 +58,11 @@ public class Room
         //MaxPlatformSize = Mathf.FloorToInt(7f * (RoomWidth / 18) * (RoomHeight / 10));
         MaxEnemies = Mathf.FloorToInt(7f * RoomMultiplier);
         MaxInteractable = Mathf.FloorToInt(4f * RoomMultiplier);
+        MinInteractable = Mathf.FloorToInt(RoomMultiplier-1);
+        if (MinInteractable<0)
+        {
+            MinInteractable = 0;
+        }
         worldHandler = WorldHandler;
         manager = WorldHandler.GetComponent<WorldManager>();
 
@@ -395,7 +401,7 @@ public class Room
         {
             return;
         }
-        int numberOfInteractables = UnityEngine.Random.Range(0, MaxInteractable);
+        int numberOfInteractables = UnityEngine.Random.Range(MinInteractable, MaxInteractable);
         for (int i = 0; i < numberOfInteractables; i++)
         {
             Vector2 location = FindEmptySpace();

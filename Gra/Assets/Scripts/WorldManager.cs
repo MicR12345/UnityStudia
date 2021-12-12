@@ -21,8 +21,6 @@ public class WorldManager : MonoBehaviour
 
     public PlayerMovement playerMovement;
 
-    float LastTakenDamage;
-
     public GameObject ScorePointDisplayGO;
     TextMeshPro scoreTextMesh;
 
@@ -101,9 +99,9 @@ public class WorldManager : MonoBehaviour
             playerMovement.InputsCleanup();
             SceneManager.LoadScene("MainMenu");
         }
-        if (playerData.invinclible && Time.time - LastTakenDamage > playerData.invincibilityTime)
+        if (playerData.invincibilityTimer>0)
         {
-            playerData.invinclible = false;
+            playerData.invincibilityTimer = playerData.invincibilityTimer - Time.deltaTime;
         }
         if (playerData.attackCooldownTimer>0)
         {
@@ -154,10 +152,9 @@ public class WorldManager : MonoBehaviour
     }
     public void PlayerTakeDamage(float damage,bool fromLeft)
     {
-        if (!playerData.invinclible)
+        if (playerData.invincibilityTimer<=0)
         {
-            LastTakenDamage = Time.time;
-            playerData.invinclible = true;
+            playerData.invincibilityTimer = playerData.invincibilityTime;
             playerData.Health = playerData.Health - damage;
             UpdateHpBar();
             playerMovement.TakeDamage(fromLeft);
