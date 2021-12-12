@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class Room
 {
-    static public int RoomHeight = 10;
-    static public int RoomWidth = 28;
+    public int RoomHeight = 10;
+    public int RoomWidth = 18;
     //maximum number of attempts at creating a solid platform
-    static public int PlatformCount = 15;
+    public int PlatformCount = 15;
     //Solid platform size
     static public int MinPlatformSize = 3;
-    static public int MaxPlatformSize = 5;
+    public int MaxPlatformSize = 7;
     //What is considered jump range
     //Number of gaps before it becomes unreachable horizontally
     static public int JumpRangeHorizontal = 3;
@@ -22,16 +22,18 @@ public class Room
 
     static public int MaxNonSolidPlatformDistance = 3;
 
-    static public int MaxEnemies = 7;
+    public int MaxEnemies = 7;
 
-    static public int MaxInteractable = 4;
+    public int MaxInteractable = 4;
+
+    public float RoomMultiplier = 1;
 
     WorldManager manager;
     GameObject worldHandler;
 
     public GameObject roomObject;
-    Block[,] blocks = new Block[RoomHeight, RoomWidth];
-    GameObject[,] blockObjects = new GameObject[RoomHeight, RoomWidth];
+    Block[,] blocks;
+    GameObject[,] blockObjects;
     List<Block> aviableBlocks;
     string roomTheme;
 
@@ -44,8 +46,17 @@ public class Room
     List<Enemy> enemies;
 
     public int roomNumber;
-    public Room(GameObject WorldHandler, ThemedBlockList theme, int x, int y,int roomNb)
+    public Room(GameObject WorldHandler, ThemedBlockList theme, int x, int y,int roomNb,int roomSizeX,int roomSizeY)
     {
+        blocks = new Block[roomSizeY, roomSizeX];
+        blockObjects = new GameObject[roomSizeY, roomSizeX];
+        RoomHeight = roomSizeY;
+        RoomWidth = roomSizeX;
+        RoomMultiplier = (RoomWidth / 18) * (RoomHeight / 10);
+        PlatformCount = Mathf.FloorToInt(15f * RoomMultiplier);
+        //MaxPlatformSize = Mathf.FloorToInt(7f * (RoomWidth / 18) * (RoomHeight / 10));
+        MaxEnemies = Mathf.FloorToInt(7f * RoomMultiplier);
+        MaxInteractable = Mathf.FloorToInt(4f * RoomMultiplier);
         worldHandler = WorldHandler;
         manager = WorldHandler.GetComponent<WorldManager>();
 
@@ -103,10 +114,21 @@ public class Room
         for (int i = 0; i < numberOfPlatforms; i++)
         {
             int posX = UnityEngine.Random.Range(1, RoomWidth - 1);
-            int posY = UnityEngine.Random.Range(2, RoomHeight - 1);
+            int posY = UnityEngine.Random.Range(3, RoomHeight - 2);
             int platformSize = UnityEngine.Random.Range(MinPlatformSize, MaxPlatformSize+1);
-
             bool cantCreate = false;
+            if (!IsInJumpRange(posX, posY, platformSize))
+            {
+                int moveX = CanWeMovePlatformHorizontallyToMoveRange(posX, posY, platformSize);
+                posX += moveX;
+                if (!IsInJumpRange(posX, posY, platformSize))
+                {
+                    int moveY = CanWeMovePlatformVerticallyToMoveRange(posX, posY, platformSize);
+                    posY += moveY;
+                    if (!IsInJumpRange(posX, posY, platformSize)) cantCreate = true;
+                }
+            }
+            
             if (CheckForCollidingPlatforms(posX,posY,platformSize))
             {
                 int moveX = CanWeMovePlatformHorizontally(posX, posY, platformSize);
@@ -197,15 +219,108 @@ public class Room
         }
         return 0;
     }
-    /*bool IsInJumpRange()
+    int CanWeMovePlatformVerticallyToMoveRange(int x, int y, int size)
     {
-
+        //Attempt moving down
+        for (int i = 1; i <= MaxMoveDistance; i++)
+        {
+            if (y + i < RoomHeight - 1)
+            {
+                if (IsInJumpRange(x, y + i, size))
+                {
+                    return i;
+                }
+            }
+        }
+        //Attempt moving up
+        for (int i = 1; i <= MaxMoveDistance; i++)
+        {
+            if (y - i > 2)
+            {
+                if (IsInJumpRange(x, y - i, size))
+                {
+                    return -i;
+                }
+            }
+        }
+        return 0;
     }
-    //0s or X and Y distance to aviable spot
-    Tuple<int,int> MoveToJumpRange()
+    int CanWeMovePlatformHorizontallyToMoveRange(int x, int y, int size)
     {
+        //Attempt moving right
+        for (int i = 1; i <= MaxMoveDistance; i++)
+        {
+            if (x + i < RoomWidth - 1 && x + i + size < RoomWidth)
+            {
+                if (IsInJumpRange(x + i, y, size))
+                {
+                    return i;
+                }
+            }
+        }
+        //Attempt moving left
+        for (int i = 1; i <= MaxMoveDistance; i++)
+        {
+            if (x - i > 1 && x - i + size > 0)
+            {
+                if (IsInJumpRange(x - i, y, size))
+                {
+                    return -i;
+                }
+            }
+        }
+        return 0;
+    }
+    bool IsInJumpRange(int x, int y, int size)
+    {
+        if (x-2>0)
+        {
+            for (int j = x - 2; j < x; j++)
+            {
+                int i = -2;
+                if (y+i>0)
+                {
+                    if (IsThereABlock(j, y + i) && blocks[y + i, j].canBeUsedAsFloor)
+                    {
+                        return true;
+                    }
+                }
+                
+                i = 2;
+                if (y+i<RoomHeight)
+                {
+                    if (IsThereABlock(j, y + i) && blocks[y + i, j].canBeUsedAsFloor)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        if (x+size+2<RoomWidth)
+        {
+            for (int j = x + size + 1; j < x + size + 2; j++)
+            {
+                int i = -2;
+                if (y + i > 0)
+                {
+                    if (IsThereABlock(j, y + i) && blocks[y + i, j].canBeUsedAsFloor)
+                    {
+                        return true;
+                    }
+                }
 
-    }*/
+                i = 2;
+                if (y + i < RoomHeight)
+                {
+                    if (IsThereABlock(j, y + i) && blocks[y + i, j].canBeUsedAsFloor)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
     void CreateSolidPlatformAt(int x,int y,int size)
     {
         Debug.Log("Attempting to create platform at: x= " + x + " ,y= " + y);
@@ -222,7 +337,7 @@ public class Room
         {
             for (int y = 2; y < RoomHeight; y++)
             {
-                if (IsBlockSolid(x,y) && x+1<RoomWidth && !IsThereABlock(x+1, y))
+                if (IsBlockSolid(x,y) && x+1<RoomWidth && !IsThereABlock(x+1, y) && !IsThereABlock(x+1,y+1) && !IsThereABlock(x + 1, y - 1))
                 {
                     for (int i = 2 ; i < MaxNonSolidPlatformDistance+2 && x+i<RoomWidth; i++)
                     {
@@ -324,7 +439,7 @@ public class Room
         }
         else if (block.interactable)
         {
-            blockObject.layer = 9;
+            blockObject.layer = 10;
             blockObject.transform.localScale = new Vector2(0.6f, 0.6f);
             if (block.utility.Contains("heal"))
             {
@@ -337,6 +452,10 @@ public class Room
             if (block.utility.Contains("attackSpeedIncrease"))
             {
                 blockObject.AddComponent<attackSpeedIncreasescript>();
+            }
+            if (block.utility.Contains("damageIncrease"))
+            {
+                blockObject.AddComponent<damageIncreaseScript>();
             }
         }
         else
@@ -358,14 +477,15 @@ public class Room
         if(enemy.name == "slime")
         {
             Enemy newSlime = (Enemy)enemy.Clone();
-            newSlime.scoreValue = newSlime.scoreValue * roomNumber;
-            newSlime.health = newSlime.health * roomNumber;
-            newSlime.contactDamage = newSlime.contactDamage + roomNumber;
+            newSlime.scoreValue = newSlime.scoreValue * manager.totalRoomMultiplier;
+            newSlime.health = newSlime.health * manager.totalRoomMultiplier;
+            newSlime.contactDamage = newSlime.contactDamage + manager.totalRoomMultiplier;
             slimeAI slimeAI = enemyObject.AddComponent<slimeAI>();
             slimeAI.InitializeSlime(newSlime, manager, this);
         }
         enemyObject.layer = 8;
         enemyObject.tag = "Enemy";
+
         return enemyObject;
     }
 
@@ -471,9 +591,24 @@ public class Room
             int y = UnityEngine.Random.Range(3, RoomHeight-1);
             if (blocks[y,x]==null)
             {
+                while (y-1>0 && blocks[y - 1, x] == null)
+                {
+                    y--;
+                }
                 return new Vector2(x, y);
             }
         }
         return new Vector2(-1, -1);
     }
+    public Tuple<float,float,float,float> CalculateRoomBoundries()
+    {
+        return new Tuple<float, float, float, float>(
+            0 - RoomWidth / 2 + roomObject.transform.position.x,
+            0 - RoomHeight / 2 + roomObject.transform.position.y,
+            RoomWidth - 1 - RoomWidth / 2 + roomObject.transform.position.x,
+            RoomHeight - 1 - RoomHeight / 2 + roomObject.transform.position.y
+            );
+        
+    }
 }
+

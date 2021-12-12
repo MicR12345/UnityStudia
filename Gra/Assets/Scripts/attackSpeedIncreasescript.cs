@@ -17,8 +17,10 @@ public class attackSpeedIncreasescript : MonoBehaviour
                 {
                     PlayerMovement playerMovement = item.GetComponent<PlayerMovement>();
                     WorldManager wm = playerMovement.worldHandler.GetComponent<WorldManager>();
-                    wm.playerData.attackCooldown = wm.playerData.attackCooldown / 2;
-                    AudioSource.PlayClipAtPoint(wm.audioClips[9], Vector3.zero);
+                    wm.playerData.attackCooldown = wm.playerData.attackCooldown * 0.9f;
+                    wm.playerData.ASincreasedCounter++;
+                    wm.UpdateUIs();
+                    AudioSource.PlayClipAtPoint(wm.audioClips[9], this.transform.position);
                     this.gameObject.SetActive(false);
                 }
             }

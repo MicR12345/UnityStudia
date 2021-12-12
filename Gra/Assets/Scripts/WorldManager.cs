@@ -31,37 +31,74 @@ public class WorldManager : MonoBehaviour
     public GameObject Curtain;
     public Animator CurtainAnimator;
 
-    Vector2 PlayerStartPos;
     int currentRoom = 0;
 
     public List<AudioClip> audioClips;
 
+    public GameObject HPCounterObject;
+
+    TextMeshProUGUI HPCounter;
+
+    public GameObject ASCounterObject;
+    public GameObject ADCounterObject;
+    public GameObject LifeCounterObject;
+
+    TextMeshProUGUI ASCounter;
+    TextMeshProUGUI ADCounter;
+    TextMeshProUGUI LifeCounter;
+
     AudioSource audioSo;
     [SerializeField]
     Slider healthSlider;
+
+    //Szybkie dodanie paskow zycia dla przeciwnikow
+    public GameObject enemyHpBarPre;
+    public GameObject enemyLifeTextPre;
+    public GameObject enemyBarSlider;
+
+    public Camera MainCamera;
+
+    public int maxRoomSizeX;
+    public int maxRoomSizeY;
+
+    public float totalRoomMultiplier = 1f;
     void Start()
     {
         playerMovement = Player.GetComponent<PlayerMovement>();
         scoreTextMesh = ScorePointDisplayGO.GetComponent<TextMeshPro>();
+
+        ASCounter = ASCounterObject.GetComponent<TextMeshProUGUI>();
+        ADCounter = ADCounterObject.GetComponent<TextMeshProUGUI>();
+        LifeCounter = LifeCounterObject.GetComponent<TextMeshProUGUI>();
+        HPCounter = HPCounterObject.GetComponent<TextMeshProUGUI>();
+
         healthSlider = HealthSliderGO.GetComponent<Slider>();
         CurtainAnimator = Curtain.GetComponent<Animator>();
         audioSo = this.GetComponent<AudioSource>();
-        PlayerStartPos = Player.transform.position;
 
         SortOutThemesOfBlocks();
         rooms = new List<Room>();
 
         //rooms.Add(new Room(this.gameObject, ThemedBlockLists[UnityEngine.Random.Range(0, ThemedBlockLists.Count)], 0, 0));
-        rooms.Add(new Room(this.gameObject, ThemedBlockLists[0], 0, 0,currentRoom + 1));
+        rooms.Add(new Room(this.gameObject, ThemedBlockLists[0], 0, 0,currentRoom + 1,
+            UnityEngine.Random.Range(18,maxRoomSizeX), UnityEngine.Random.Range(10, maxRoomSizeY)));
 
+        Tuple<float, float, float, float> boundries = rooms[currentRoom].CalculateRoomBoundries();
+        Player.transform.position = new Vector2(boundries.Item1 + 1f, boundries.Item2 + 1.5f);
+
+        totalRoomMultiplier = totalRoomMultiplier + rooms[currentRoom].RoomMultiplier;
+        UpdateHpBar();
+        UpdateUIs();
         CurtainAnimator.Play("LiftCurtain");
     }
 
     // Update is called once per frame
     void Update()
     {
+        MoveCamera();
         if (playerData.Health<=0)
         {
+            playerMovement.InputsCleanup();
             SceneManager.LoadScene("MainMenu");
         }
         if (playerData.invinclible && Time.time - LastTakenDamage > playerData.invincibilityTime)
@@ -80,9 +117,12 @@ public class WorldManager : MonoBehaviour
         PlayerIncreaseScore(currentRoom + 1);
         rooms[currentRoom].roomObject.SetActive(false);
         currentRoom++;
-        rooms.Add(new Room(this.gameObject, ThemedBlockLists[0], 0, 0,currentRoom+1));
-        Player.transform.position = PlayerStartPos;
-        AudioSource.PlayClipAtPoint(audioClips[UnityEngine.Random.Range(0, 2)], Vector3.zero);
+        rooms.Add(new Room(this.gameObject, ThemedBlockLists[0], 0, 0,currentRoom+1,
+            UnityEngine.Random.Range(18, maxRoomSizeX), UnityEngine.Random.Range(10, maxRoomSizeY)));
+        totalRoomMultiplier = totalRoomMultiplier + rooms[currentRoom].RoomMultiplier;
+        Tuple<float, float, float, float> boundries = rooms[currentRoom].CalculateRoomBoundries();
+        Player.transform.position = new Vector2(boundries.Item1 + 1f, boundries.Item2 + 1.5f);
+        AudioSource.PlayClipAtPoint(audioClips[UnityEngine.Random.Range(0, 2)], Player.transform.position);
         CurtainAnimator.Play("LiftCurtain");
     }
     void CreateListOfBlockTypes()
@@ -119,19 +159,50 @@ public class WorldManager : MonoBehaviour
             LastTakenDamage = Time.time;
             playerData.invinclible = true;
             playerData.Health = playerData.Health - damage;
-            healthSlider.value = playerData.Health / playerData.MaxHealth;
+            UpdateHpBar();
             playerMovement.TakeDamage(fromLeft);
-            AudioSource.PlayClipAtPoint(audioClips[UnityEngine.Random.Range(3, 6)], Vector3.zero);
+            AudioSource.PlayClipAtPoint(audioClips[UnityEngine.Random.Range(3, 6)], Player.transform.position);
         }
         
+    }
+    public void UpdateUIs()
+    {
+        ADCounter.text = playerData.ADincreasedCounter.ToString();
+        ASCounter.text = playerData.ASincreasedCounter.ToString();
+        LifeCounter.text = playerData.MaxHPincreasedCounter.ToString();
     }
     public void UpdateHpBar()
     {
         healthSlider.value = playerData.Health / playerData.MaxHealth;
+        HPCounter.text = Mathf.CeilToInt(playerData.Health).ToString() + "/" + Mathf.CeilToInt(playerData.MaxHealth).ToString();
     }
     public void PlayerIncreaseScore(float score)
     {
         playerData.score = playerData.score + score;
         scoreTextMesh.text = playerData.score.ToString();
+    }
+    void MoveCamera()
+    {
+        Tuple<float, float, float, float> boundries = rooms[currentRoom].CalculateRoomBoundries();
+        float CameraX = Player.transform.position.x;
+        float CameraY = Player.transform.position.y;
+        if (CameraX<boundries.Item1 + 8.5f)
+        {
+            CameraX = boundries.Item1 + 8.5f;
+        }
+        if (CameraX > boundries.Item3 - 8.5f)
+        {
+            CameraX = boundries.Item3 - 8.5f;
+        }
+        if (CameraY < boundries.Item2 + 4.5f)
+        {
+            CameraY = boundries.Item2 + 4.5f;
+        }
+        if (CameraY > boundries.Item4 - 4.5f)
+        {
+            CameraY = boundries.Item4 - 4.5f;
+        }
+        Vector3 newCamPos = new Vector3(CameraX, CameraY, -10f);
+        MainCamera.transform.position = newCamPos;
     }
 }

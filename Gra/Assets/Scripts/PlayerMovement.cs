@@ -63,9 +63,19 @@ public class PlayerMovement : MonoBehaviour
         inputActions.Player.MainMenu.performed += MainMenu_performed;
     }
 
+    public void InputsCleanup()
+    {
+        inputActions.Disable();
+
+        inputActions.Player.Attack.performed -= On_Attack;
+        inputActions.Player.Jump.performed -= On_Jump;
+        inputActions.Player.MainMenu.performed -= MainMenu_performed;
+    }
+
     private void MainMenu_performed(InputAction.CallbackContext obj)
     {
         SceneManager.LoadScene("MainMenu");
+        InputsCleanup();
     }
 
     private void On_Jump(InputAction.CallbackContext obj)
@@ -96,7 +106,7 @@ public class PlayerMovement : MonoBehaviour
             
             lockMovement = true;
             Debug.Log("Attacked");
-            AudioSource.PlayClipAtPoint(world.audioClips[7], Vector3.zero);
+            AudioSource.PlayClipAtPoint(world.audioClips[7], this.transform.position);
             Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(new Vector2(this.transform.position.x,this.transform.position.y) + WeaponCheckOffset, WeaponRadius);
             Debug.Log(collider2Ds.Length);
             Debug.DrawLine(new Vector2(this.transform.position.x, this.transform.position.y) + WeaponCheckOffset, new Vector2(this.transform.position.x, this.transform.position.y), Color.white);
@@ -287,7 +297,7 @@ public class PlayerMovement : MonoBehaviour
         float moveX = moveVector.x;
         float moveY = moveVector.y;
 
-        int defaultLayerMask = ~(1 << 3) + ~(1 << 9);
+        int defaultLayerMask = ~(1 << 3) + ~(1 << 9) + ~(1 << 10);
         int layerMask = 0;
         if (moveY < 0) layerMask = layerMask + ~(1 << 7);
 

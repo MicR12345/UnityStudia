@@ -13,4 +13,8 @@ public class Player
     public float attackCooldown;
     public float attackCooldownTimer;
     public float score;
+
+    public int MaxHPincreasedCounter = 0;
+    public int ASincreasedCounter = 0;
+    public int ADincreasedCounter = 0;
 }

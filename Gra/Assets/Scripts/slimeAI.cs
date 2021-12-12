@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
+using TMPro;
 public class slimeAI : MonoBehaviour
 {
     public Enemy slime;
@@ -27,12 +28,44 @@ public class slimeAI : MonoBehaviour
     public float collisionTolerance = 0.05f;
     public float collisionOffSet = 0.05f;
 
-    float lastjump;
+    float lastjump = 2f;
+
+    Slider hpSlider;
+    TextMeshProUGUI hpTMP;
+
+    float initialHP;
     public void InitializeSlime(Enemy _slime,WorldManager _worldManager,Room _room)
     {
         slime = _slime;
         worldManager = _worldManager;
         room = _room;
+
+        initialHP = slime.health;
+        GameObject HpBar = new GameObject("HpBar");
+        HpBar.transform.parent = this.transform;
+        HpBar.transform.localPosition = Vector3.zero + new Vector3(0f, 1.2f,-3f);
+        HpBar.layer = 5;
+        HpBar.AddComponent<Canvas>();
+        RectTransform canvasRT = HpBar.GetComponent<RectTransform>();
+        canvasRT.sizeDelta = new Vector2(2.30f, 0.25f);
+        GameObject HpBarBG = GameObject.Instantiate(worldManager.enemyHpBarPre);
+        HpBarBG.transform.parent = HpBar.transform;
+        HpBarBG.transform.localPosition = Vector3.zero + new Vector3(0f,0f,1f);
+
+        GameObject HpBarSlider = GameObject.Instantiate(worldManager.enemyBarSlider);
+        HpBarSlider.transform.parent = HpBar.transform;
+        RectTransform BarRT = HpBarSlider.GetComponent<RectTransform>();
+
+        GameObject HpBarText = GameObject.Instantiate(worldManager.enemyLifeTextPre);
+        HpBarText.transform.parent = HpBar.transform;
+        HpBarText.transform.localPosition = Vector3.zero;
+        hpTMP = HpBarText.GetComponent<TextMeshProUGUI>();
+        HpBarSlider.transform.localPosition = Vector3.zero;
+        BarRT.offsetMin = Vector2.zero;
+        BarRT.offsetMax = Vector2.zero;
+        hpSlider = HpBarBG.GetComponent<Slider>();
+        hpSlider.fillRect = HpBarSlider.GetComponent<RectTransform>();
+        UpdateHPBar();
     }
     // Start is called before the first frame update
     void Start()
@@ -111,6 +144,11 @@ public class slimeAI : MonoBehaviour
         }
         if(lastjump>0)lastjump = lastjump - Time.deltaTime;
     }
+    public void UpdateHPBar()
+    {
+        hpSlider.value = slime.health / initialHP;
+        hpTMP.text = Mathf.CeilToInt(slime.health).ToString() + "/" + Mathf.CeilToInt(initialHP).ToString();
+    }
     public void TakeDamage(Vector2 damageSource,float damage)
     {
         if (slime.invincibilityTimer <= 0){
@@ -118,17 +156,17 @@ public class slimeAI : MonoBehaviour
             Vector2 damageVector = new Vector2(this.transform.position.x, this.transform.position.y) - damageSource;
             if (damageVector.x >= 0)
             {
-                rigidbody.velocity = new Vector2(rigidbody.velocity.x + (1f * damage), rigidbody.velocity.y + (1f * damage));
+                rigidbody.velocity = new Vector2(rigidbody.velocity.x + (0.01f * damage) +1f, rigidbody.velocity.y + (0.01f * damage) + 1f);
                 jumped = true;
             }
             else
             {
-                rigidbody.velocity = new Vector2(-rigidbody.velocity.x - (1f * damage), rigidbody.velocity.y + (1f * damage));
+                rigidbody.velocity = new Vector2(-rigidbody.velocity.x - (0.01f * damage) - 1f, rigidbody.velocity.y + (0.01f * damage) + 1f);
                 jumped = true;
             }
             slime.invincibilityTimer = slime.invincibilityTime;
         }
-
+        UpdateHPBar();
     }
     void DamagePlayerContact(bool fromLeft)
     {
@@ -136,7 +174,7 @@ public class slimeAI : MonoBehaviour
     }
     void DetectCollisions()
     {
-        int defaultLayerMask = ~(1 << 8);
+        int defaultLayerMask = ~(1 << 8) + ~(1 << 10);
         int layerMask = 0;
         if (rigidbody.velocity.y < 0) layerMask = layerMask + ~(1 << 7);
 
