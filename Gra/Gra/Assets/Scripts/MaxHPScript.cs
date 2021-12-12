@@ -20,6 +20,7 @@ public class MaxHPScript : MonoBehaviour
                     wm.playerData.MaxHealth = wm.playerData.MaxHealth + 5;
                     wm.playerData.Health = wm.playerData.MaxHealth;
                     wm.UpdateHpBar();
+                    AudioSource.PlayClipAtPoint(wm.audioClips[9], Vector3.zero);
                     this.gameObject.SetActive(false);
                 }
             }

@@ -114,15 +114,17 @@ public class slimeAI : MonoBehaviour
     public void TakeDamage(Vector2 damageSource,float damage)
     {
         if (slime.invincibilityTimer <= 0){
-            slime.health = slime.health - (damage / slime.armor+1);
+            slime.health = slime.health - (damage / (slime.armor+1));
             Vector2 damageVector = new Vector2(this.transform.position.x, this.transform.position.y) - damageSource;
             if (damageVector.x >= 0)
             {
-                rigidbody.velocity = new Vector2(rigidbody.velocity.x + 1f * damage, rigidbody.velocity.y + 1f * damage);
+                rigidbody.velocity = new Vector2(rigidbody.velocity.x + (1f * damage), rigidbody.velocity.y + (1f * damage));
+                jumped = true;
             }
             else
             {
-                rigidbody.velocity = new Vector2(-rigidbody.velocity.x - 1f * damage, rigidbody.velocity.y + 1f * damage);
+                rigidbody.velocity = new Vector2(-rigidbody.velocity.x - (1f * damage), rigidbody.velocity.y + (1f * damage));
+                jumped = true;
             }
             slime.invincibilityTimer = slime.invincibilityTime;
         }

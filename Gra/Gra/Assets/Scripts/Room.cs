@@ -6,7 +6,7 @@ using UnityEngine;
 public class Room
 {
     static public int RoomHeight = 10;
-    static public int RoomWidth = 18;
+    static public int RoomWidth = 28;
     //maximum number of attempts at creating a solid platform
     static public int PlatformCount = 15;
     //Solid platform size
@@ -24,7 +24,7 @@ public class Room
 
     static public int MaxEnemies = 7;
 
-    static public int MaxInteractable = 2;
+    static public int MaxInteractable = 4;
 
     WorldManager manager;
     GameObject worldHandler;
@@ -326,13 +326,17 @@ public class Room
         {
             blockObject.layer = 9;
             blockObject.transform.localScale = new Vector2(0.6f, 0.6f);
-            if (block.utility == "heal")
+            if (block.utility.Contains("heal"))
             {
                 blockObject.AddComponent<HealScript>();
             }
-            if (block.utility =="maxHP")
+            if (block.utility.Contains("maxHP"))
             {
                 blockObject.AddComponent<MaxHPScript>();
+            }
+            if (block.utility.Contains("attackSpeedIncrease"))
+            {
+                blockObject.AddComponent<attackSpeedIncreasescript>();
             }
         }
         else

@@ -52,6 +52,7 @@ public class PlayerMovement : MonoBehaviour
     WorldManager world;
 
     public GameObject weapon;
+    private Vector3 originalWeaponScale;
     private void Awake()
     {
         inputActions = new ActionsInput();
@@ -95,6 +96,7 @@ public class PlayerMovement : MonoBehaviour
             
             lockMovement = true;
             Debug.Log("Attacked");
+            AudioSource.PlayClipAtPoint(world.audioClips[7], Vector3.zero);
             Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(new Vector2(this.transform.position.x,this.transform.position.y) + WeaponCheckOffset, WeaponRadius);
             Debug.Log(collider2Ds.Length);
             Debug.DrawLine(new Vector2(this.transform.position.x, this.transform.position.y) + WeaponCheckOffset, new Vector2(this.transform.position.x, this.transform.position.y), Color.white);
@@ -148,6 +150,7 @@ public class PlayerMovement : MonoBehaviour
         spriteRenderer = this.GetComponent<SpriteRenderer>();
         animator = this.GetComponent<Animator>();
         weaponRenderer = weapon.GetComponent<SpriteRenderer>();
+        originalWeaponScale = weapon.transform.localScale;
 
         WeaponCheckOffset = WeaponDamageCheckOffsetGO.transform.localPosition;
 

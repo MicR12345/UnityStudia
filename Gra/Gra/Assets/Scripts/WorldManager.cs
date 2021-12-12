@@ -82,7 +82,7 @@ public class WorldManager : MonoBehaviour
         currentRoom++;
         rooms.Add(new Room(this.gameObject, ThemedBlockLists[0], 0, 0,currentRoom+1));
         Player.transform.position = PlayerStartPos;
-        AudioSource.PlayClipAtPoint(audioClips[UnityEngine.Random.Range(0, 2)], this.PlayerStartPos);
+        AudioSource.PlayClipAtPoint(audioClips[UnityEngine.Random.Range(0, 2)], Vector3.zero);
         CurtainAnimator.Play("LiftCurtain");
     }
     void CreateListOfBlockTypes()

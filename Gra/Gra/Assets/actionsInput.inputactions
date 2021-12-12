@@ -195,11 +195,33 @@
                 },
                 {
                     "name": "",
+                    "id": "83ec167b-2333-47f1-85ed-fd2c6942aa50",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "12396f39-449f-4049-89cf-e53f19f102ed",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
+                    "action": "MainMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ea67efd7-e6f1-4718-8aeb-2ee832c09422",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "MainMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
