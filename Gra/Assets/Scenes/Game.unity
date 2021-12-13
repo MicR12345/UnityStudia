@@ -647,8 +647,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.4, y: -18.2}
-  m_SizeDelta: {x: 10.3, y: 15.85}
+  m_AnchoredPosition: {x: 22.64, y: -18.2}
+  m_SizeDelta: {x: 38.77, y: 15.85}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &400681121
 MonoBehaviour:
@@ -733,7 +733,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -0.000023848326, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1110,8 +1110,8 @@ MonoBehaviour:
   enemyLifeTextPre: {fileID: 66532552927711194, guid: aa9190edba9c4d4499fc6223c31f8f03, type: 3}
   enemyBarSlider: {fileID: 871675947080416572, guid: 19c38f8639ab38d4d86d0c12fb7edb24, type: 3}
   MainCamera: {fileID: 519420031}
-  maxRoomSizeX: 128
-  maxRoomSizeY: 20
+  maxRoomSizeX: 64
+  maxRoomSizeY: 40
   totalRoomMultiplier: 1
 --- !u!114 &537283408
 MonoBehaviour:
@@ -3102,8 +3102,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.4, y: -18.2}
-  m_SizeDelta: {x: 10.3, y: 15.85}
+  m_AnchoredPosition: {x: 20.7, y: -18.2}
+  m_SizeDelta: {x: 34.9, y: 15.85}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1650215728
 MonoBehaviour:
@@ -3433,7 +3433,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 051168dd3f18b614cb273426a6521fb5, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.3
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -4103,8 +4103,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.4, y: -18.2}
-  m_SizeDelta: {x: 10.3, y: 15.85}
+  m_AnchoredPosition: {x: 22.74, y: -18.2}
+  m_SizeDelta: {x: 39, y: 15.85}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2137234205
 MonoBehaviour:

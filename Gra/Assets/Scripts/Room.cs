@@ -57,7 +57,7 @@ public class Room
         PlatformCount = Mathf.FloorToInt(15f * RoomMultiplier);
         //MaxPlatformSize = Mathf.FloorToInt(7f * (RoomWidth / 18) * (RoomHeight / 10));
         MaxEnemies = Mathf.FloorToInt(7f * RoomMultiplier);
-        MaxInteractable = Mathf.FloorToInt(4f * RoomMultiplier);
+        MaxInteractable = Mathf.FloorToInt(2f * RoomMultiplier);
         MinInteractable = Mathf.FloorToInt(RoomMultiplier-1);
         if (MinInteractable<0)
         {
